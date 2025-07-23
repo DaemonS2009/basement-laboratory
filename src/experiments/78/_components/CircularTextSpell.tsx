@@ -20,11 +20,13 @@ type CreateInstancesProps = {
   color: string
   isRandomVariation: boolean
   rotationX: number
+  rotationY: number
   rotationZ: number
   spiralTurns: number
   spiralDirection: number
   minY: number
   maxY: number
+  textContent: string
 }
 
 const createInstances = ({
@@ -36,11 +38,13 @@ const createInstances = ({
   color,
   isRandomVariation,
   rotationX,
+  rotationY,
   rotationZ,
   spiralTurns,
   spiralDirection,
   minY,
-  maxY
+  maxY,
+  textContent
 }: CreateInstancesProps) => {
   const textInstances: React.JSX.Element[] = []
 
@@ -77,12 +81,15 @@ const createInstances = ({
         position={[x, finalY, z]}
         rotation={[
           rotationX,
-          -angle + Math.PI / 2 + (variation ? variation.rotationOffset : 0),
+          -angle +
+            Math.PI / 2 +
+            (variation ? variation.rotationOffset : 0) +
+            rotationY,
           rotationZ
         ]}
         letterSpacing={0.1}
       >
-        Ship
+        {textContent}
       </Text>
     )
   }
@@ -90,47 +97,93 @@ const createInstances = ({
   return textInstances
 }
 
-export default function CircularTextSpell() {
+const circularPreset = {
+  radius: 1.6,
+  count: 30,
+  fontSize: 0.15,
+  opacity: 0.05,
+  rotationSpeed: 0.2,
+  verticalOffset: -4.1,
+  variation: false,
+  rotationX: 0,
+  rotationY: 0,
+  rotationZ: 0,
+  spiralHeight: 0.0,
+  spiralTurns: 0.5,
+  spiralDirection: 1,
+  minY: 2.6,
+  maxY: 2.6,
+  color: '#fff  '
+}
+
+const spiralPreset = {
+  count: 46,
+  radius: 1.9,
+  fontSize: 0.15,
+  opacity: 0.05,
+  rotationSpeed: 0.5,
+  verticalOffset: -0.5,
+  variation: false,
+  rotationX: 0,
+  rotationY: 0,
+  rotationZ: 45,
+  spiralHeight: 1.5,
+  spiralTurns: 1.2,
+  spiralDirection: 1,
+  minY: 1.3,
+  maxY: -0.4,
+  color: '#383838'
+}
+
+export default function CircularTextSpell({
+  presetProps = 'spiral',
+  textContent = 'Ship'
+}: {
+  presetProps: 'spiral' | 'circular'
+  textContent: string
+}) {
   const groupRef = useRef<THREE.Group>(null)
 
+  const preset = presetProps === 'spiral' ? spiralPreset : circularPreset
+
   const controls = useControls({
-    'Circular Text': folder({
+    [presetProps + ' Text']: folder({
       color: {
-        value: '#383838',
+        value: preset.color,
         label: 'Color'
       },
       radius: {
-        value: 1.9,
+        value: preset.radius,
         min: 0,
         max: 20,
         step: 0.1
       },
       count: {
-        value: 46,
+        value: preset.count,
         min: 1,
         max: 100,
         step: 1
       },
       fontSize: {
-        value: 0.15,
+        value: preset.fontSize,
         min: 0.1,
         max: 1,
         step: 0.05
       },
       opacity: {
-        value: 0.05,
+        value: preset.opacity,
         min: 0,
         max: 1,
         step: 0.01
       },
       rotationSpeed: {
-        value: 0.5,
+        value: preset.rotationSpeed,
         min: -2,
         max: 2,
         step: 0.1
       },
       verticalOffset: {
-        value: -2.3,
+        value: preset.verticalOffset,
         min: -5,
         max: 5,
         step: 0.1
@@ -140,48 +193,53 @@ export default function CircularTextSpell() {
         label: 'Add Variation'
       },
       rotationX: {
-        value: 0,
+        value: preset.rotationX,
         min: -180,
         max: 180,
         step: 1
       },
-
+      rotationY: {
+        value: preset.rotationY,
+        min: -180,
+        max: 180,
+        step: 1
+      },
       rotationZ: {
-        value: 45,
+        value: preset.rotationZ,
         min: -180,
         max: 180,
         step: 1
       },
       spiralHeight: {
-        value: 1.5,
+        value: preset.spiralHeight,
         min: 0,
         max: 10,
         step: 0.1,
         label: 'Spiral Height'
       },
       spiralTurns: {
-        value: 1.2,
-        min: 0.5,
+        value: preset.spiralTurns,
+        min: 0,
         max: 5,
         step: 0.1,
         label: 'Spiral Turns'
       },
       spiralDirection: {
-        value: 1,
+        value: preset.spiralDirection,
         min: -1,
         max: 1,
         step: 0.2,
         label: 'Spiral Direction'
       },
       minY: {
-        value: 3,
+        value: preset.minY,
         min: -10,
         max: 10,
         step: 0.1,
         label: 'Min Y Position'
       },
       maxY: {
-        value: 0.7,
+        value: preset.maxY,
         min: -10,
         max: 10,
         step: 0.1,
@@ -213,11 +271,13 @@ export default function CircularTextSpell() {
     color: controls.color,
     isRandomVariation: controls.variation,
     rotationX: controls.rotationX,
+    rotationY: controls.rotationY,
     rotationZ: controls.rotationZ,
     spiralTurns: controls.spiralTurns,
     spiralDirection: controls.spiralDirection,
     minY: controls.minY,
-    maxY: controls.maxY
+    maxY: controls.maxY,
+    textContent: textContent
   })
 
   return <group ref={groupRef}>{textInstances}</group>

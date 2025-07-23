@@ -40,7 +40,8 @@ export default function Scene() {
 
       <ambientLight intensity={10} color="#404040" />
 
-      <CircularTextSpell />
+      <CircularTextSpell presetProps="circular" textContent="x" />
+      <CircularTextSpell presetProps="spiral" textContent="Ship" />
       <XMCPModel />
       <Effects />
     </>
