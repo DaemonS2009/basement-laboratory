@@ -1,35 +1,10 @@
-import { Environment } from '@react-three/drei'
+import { OrbitControls, PerspectiveCamera } from '@react-three/drei'
 import XMCPModel from './XmcpModel'
+import CircularTextSpell from './CircularTextSpell'
 import { folder, useControls } from 'leva'
 import { Bloom, EffectComposer } from '@react-three/postprocessing'
 
 export default function Scene() {
-  const lightingControls = useControls({
-    'Scene Lighting': folder({
-      enableEnvironment: {
-        value: true
-      },
-      environmentIntensity: {
-        value: 1.0,
-        min: 0,
-        max: 3,
-        step: 0.1
-      },
-      directionalIntensity: {
-        value: 2.0,
-        min: 0,
-        max: 5,
-        step: 0.1
-      },
-      directionalPosition: {
-        value: [5, 5, 5],
-        min: -10,
-        max: 10,
-        step: 0.1
-      }
-    })
-  })
-
   const Effects = () => {
     const controls = useControls({
       'Bloom Effect': folder({
@@ -41,7 +16,6 @@ export default function Scene() {
 
     return (
       <EffectComposer multisampling={0} stencilBuffer={true}>
-        {/* <Dithering /> */}
         <Bloom
           luminanceThreshold={controls.luminanceThreshold}
           luminanceSmoothing={controls.luminanceSmoothing}
@@ -54,21 +28,19 @@ export default function Scene() {
 
   return (
     <>
-      {lightingControls.enableEnvironment && (
-        <Environment
-          preset="studio"
-          environmentIntensity={lightingControls.environmentIntensity}
-        />
-      )}
+      <OrbitControls enableDamping enableZoom={true} enableRotate={false} />
+      <PerspectiveCamera makeDefault position={[0, 0, 5]} fov={60} />
 
-      <directionalLight
-        position={lightingControls.directionalPosition}
-        intensity={lightingControls.directionalIntensity}
-        color="#ffffff"
-        castShadow
-      />
-      <ambientLight intensity={0.3} color="#404040" />
-      <pointLight position={[-5, 3, 2]} intensity={1.5} color="#ffffff" />
+      <pointLight position={[0, 0, 0]} intensity={5} color="#ffffff" />
+
+      <mesh position={[0, -2, 0]} rotation={[-1.3, 0, 0]}>
+        <planeGeometry args={[20, 20]} />
+        <meshStandardMaterial color="black" />
+      </mesh>
+
+      <ambientLight intensity={10} color="#404040" />
+
+      <CircularTextSpell />
       <XMCPModel />
       <Effects />
     </>

@@ -1,10 +1,11 @@
+import React, { useRef, useMemo } from 'react'
+import * as THREE from 'three'
 import { useGLTF } from '@react-three/drei'
 import { GLTF } from 'three/examples/jsm/Addons.js'
-import React, { useRef, useMemo } from 'react'
-import { useFrame } from '@react-three/fiber'
-import * as THREE from 'three'
-import { ditheringVertexShader, ditheringFragmentShader } from '../shaders'
 import { folder, useControls } from 'leva'
+import { useFrame } from '@react-three/fiber'
+
+import { ditheringVertexShader, ditheringFragmentShader } from '../shaders'
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -75,8 +76,9 @@ export default function XMCPModel() {
     if (!groupRef.current || !shaderMaterial.uniforms) return
 
     groupRef.current.rotation.y = Math.sin(state.clock.elapsedTime) * 0.4
+    groupRef.current.position.y = Math.sin(state.clock.elapsedTime) * 0.2
 
-    // Update shader uniforms directly on the shaderMaterial object
+    // Update shader uniforms
     shaderMaterial.uniforms.uTime.value = state.clock.elapsedTime
     shaderMaterial.uniforms.uCameraPosition.value.copy(state.camera.position)
     shaderMaterial.uniforms.uMetallic.value = shaderControls.metallic
