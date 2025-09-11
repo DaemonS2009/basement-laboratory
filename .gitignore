@@ -4,6 +4,8 @@
 /node_modules
 /.pnp
 .pnp.js
+pnpm-lock.yaml
+yarn.lock
 
 # testing
 /coverage
@@ -26,6 +28,7 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
 
 # local env files
 .env
