@@ -22,7 +22,9 @@ export type ExperimentsSectionProps = {
   }[]
 }
 
-const ExperimentsSection: FC<ExperimentsSectionProps> = ({ experiments }) => {
+const ExperimentsSection: FC<ExperimentsSectionProps> = ({
+  experiments
+}: ExperimentsSectionProps) => {
   const [tagFilters, setTagFilters] = useState<string[]>([])
   const filteredExperiments = experiments.filter(({ tags }) => {
     const match =
