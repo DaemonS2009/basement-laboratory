@@ -7,7 +7,7 @@ const CD = model('cd.glb', {
   environment: 'sunset'
 })
 
-CD.Title = 'CD found under the desk'
-CD.Tags = '3d'
+CD.Title = 'LordMercy'
+CD.Tags = 'Low-Poly Memories'
 
 export default CD
